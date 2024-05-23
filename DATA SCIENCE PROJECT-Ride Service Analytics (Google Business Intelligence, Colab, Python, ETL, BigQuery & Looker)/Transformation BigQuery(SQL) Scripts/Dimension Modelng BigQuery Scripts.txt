@@ -1,0 +1,165 @@
+Dimension Modelng BigQuery Codes:
+
+============================================================================================================
+1) Build Fact Transaction:
+============================================================================================================
+
+CREATE TABLE IF NOT EXISTS `RideService.PickupDateTime_Dimension` (
+  Trip_ID INT64,
+  VendorID INT64,
+  tpep_pickup_datetime TIMESTAMP,
+  tpep_dropoff_datetime TIMESTAMP,
+  passenger_count INT64,
+  trip_distance FLOAT64,
+  PickupLocation_ID INT64,
+  DropoffLocation_ID INT64,
+  RatecodeID INT64,
+  store_and_fwd_flag STRING,
+  payment_type INT64,
+  fare_amount FLOAT64,
+  extra FLOAT64,
+  mta_tax FLOAT64,
+  tip_amount FLOAT64,
+  tolls_amount FLOAT64,
+  improvement_surcharge FLOAT64,
+  total_amount FLOAT64
+);
+INSERT INTO `RideService.FactTransaction`
+SELECT
+  Trip_ID, 
+  VendorID, 
+  tpep_pickup_datetime, 
+  tpep_dropoff_datetime, 
+  passenger_count, 
+  trip_distance, 
+  PickupLocation_ID, 
+  DropoffLocation_ID, 
+  RatecodeID, 
+  store_and_fwd_flag, 
+  payment_type, 
+  fare_amount, 
+  extra, 
+  mta_tax, 
+  tip_amount, 
+  tolls_amount, 
+  improvement_surcharge, 
+  total_amount
+FROM
+  `RideService.FinalTable`;
+
+============================================================================================================
+2) Build Pickup DateTime Dimension:
+============================================================================================================
+
+CREATE TABLE IF NOT EXISTS `RideService.PickupDateTime_Dimension` (
+  tpep_pickup_datetime TIMESTAMP,
+  Pickup_Day INT64, 
+  Pickup_Month INT64, 
+  Pickup_Year INT64, 
+  Pickup_Hour INT64, 
+  Pickup_Minute INT64, 
+  Pickup_Second INT64
+);
+INSERT INTO `RideService.PickupDateTime_Dimension`
+SELECT
+  tpep_pickup_datetime, 
+  Pickup_Day, 
+  Pickup_Month, 
+  Pickup_Year, 
+  Pickup_Hour, 
+  Pickup_Minute, 
+  Pickup_Second
+FROM
+  `RideService.FinalTable`;
+
+============================================================================================================
+3) Build Dropoff DateTime Dimension:
+============================================================================================================
+
+CREATE TABLE IF NOT EXISTS `RideService.DropoffDateTime_Dimension` (
+  tpep_dropoff_datetime TIMESTAMP,
+  Dropoff_Day INT64, 
+  Dropoff_Month INT64, 
+  Dropoff_Year INT64, 
+  Dropoff_Hour INT64, 
+  Dropoff_Minute INT64, 
+  Dropoff_Second INT64
+);
+INSERT INTO `RideService.DropoffDateTime_Dimension`
+SELECT
+  tpep_dropoff_datetime, 
+  Dropoff_Day, 
+  Dropoff_Month, 
+  Dropoff_Year, 
+  Dropoff_Hour, 
+  Dropoff_Minute, 
+  Dropoff_Second
+FROM
+  `RideService.FinalTable`;
+
+
+============================================================================================================
+4) Build Pickup Location Dimension:
+============================================================================================================
+
+CREATE TABLE IF NOT EXISTS `RideService.PickupLocation_Dimension` (
+  PickupLocation_ID INT64,
+  pickup_longitude FLOAT64, 
+  pickup_latitude FLOAT64
+);
+INSERT INTO `RideService.PickupLocation_Dimension`
+SELECT 
+  PickupLocation_ID, 
+  pickup_longitude, 
+  pickup_latitude
+FROM
+  `RideService.FinalTable`;
+
+============================================================================================================
+5) Build Dropoff Location Dimension:
+============================================================================================================
+
+CREATE TABLE IF NOT EXISTS `RideService.DropoffLocation_Dimension` (
+  DropoffLocation_ID INT64,
+  dropoff_longitude FLOAT64, 
+  dropoff_latitude FLOAT64
+);
+INSERT INTO `RideService.DropoffLocation_Dimension`
+SELECT
+  DropoffLocation_ID, 
+  dropoff_longitude, 
+  dropoff_latitude
+FROM
+  `RideService.FinalTable`;
+
+============================================================================================================
+6) Build RateCode Dimension:
+============================================================================================================
+
+CREATE TABLE IF NOT EXISTS `RideService.RateCode_Dimension` (
+  RatecodeID INT64, 
+  RateCode_Type STRING
+);
+INSERT INTO `RideService.RateCode_Dimension`
+SELECT
+  RatecodeID, 
+  RateCode_Type
+FROM
+  `RideService.FinalTable`;
+
+============================================================================================================
+7) Build PaymentType Dimension:
+============================================================================================================
+
+CREATE TABLE IF NOT EXISTS `RideService.PaymentType_Dimension` (
+  payment_type INT64,
+  payment_category STRING
+);
+INSERT INTO `RideService.PaymentType_Dimension`
+SELECT
+  payment_type, 
+  payment_category
+FROM
+  `RideService.FinalTable`;
+
+============================================================================================================
